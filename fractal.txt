@@ -1,0 +1,203 @@
+#mandle
+import turtle
+import math
+
+def mandelbrot(z , c , n=20):
+    if abs(z) > 10 ** 12:
+        return float("nan")
+    elif n > 0:
+        return mandelbrot(z ** 2 + c, c, n - 1)
+    else:
+        return z ** 2 + c
+
+# screen size (in pixels)
+screenx, screeny = 800, 600
+
+# complex plane limits
+complexPlaneX, complexPlaneY = (-2.0, 2.0), (-1.0, 2.0)
+
+# discretization step
+step = 2
+
+# turtle config
+turtle.tracer(0, 0)
+turtle.setup(screenx, screeny)
+
+screen = turtle.Screen()
+screen.bgcolor("red")
+screen.title("Mandelbrot Fractal (discretization step = %d)" % (int(step)))
+mTurtle = turtle.Turtle()
+mTurtle.penup()
+mTurtle.shape("square")
+
+# px * pixelToX = x in complex plane coordinates
+pixelToX, pixelToY = (complexPlaneX[1] - complexPlaneX[0])/screenx, (complexPlaneY[1] - complexPlaneY[0])/screeny
+
+# plot
+for px in range(-int(screenx/2), int(screenx/2), int(step)):
+    for py in range(-int(screeny/2), int(screeny/2), int(step)):
+        x, y = px * pixelToX, py * pixelToY
+        m =  mandelbrot(0, x + 1j * y)
+        if not math.isnan(m.real):
+            color = [abs(math.sin(m.imag)) for i in range(3)]
+            mTurtle.color(color)
+            mTurtle.dot(2.4, color)
+            mTurtle.goto(px, py)
+    turtle.update()
+
+turtle.mainloop()
+-----------------------------------------------------------
+
+#julia
+
+import turtle
+import math
+
+# Define global variable max_iter
+max_iter = 20
+
+# Julia set function
+def julia(z, c, max_iter=max_iter):
+    for i in range(max_iter):
+        if abs(z) > 2:
+            return i
+        z = z ** 2 + c
+    return max_iter
+
+# Screen size (in pixels)
+screenx, screeny = 200, 200
+
+# Complex plane limits
+complexPlaneX, complexPlaneY = (-2.0, 2.0), (-1.0, 2.0)
+
+# Discretization step
+step = 1
+
+# Turtle config
+turtle.tracer(0, 0)
+turtle.setup(screenx, screeny)
+
+screen = turtle.Screen()
+screen.bgcolor("black")
+screen.title(f"Julia Set (c = complex(-0.4, 0.6))")
+
+# Choose a complex constant c for the Julia set
+c = complex(-0.4, 0.6)
+
+# Create a turtle for drawing
+jTurtle = turtle.Turtle()
+jTurtle.penup()
+jTurtle.shape("square")
+
+# px * pixelToX = x in complex plane coordinates
+pixelToX, pixelToY = (complexPlaneX[1] - complexPlaneX[0])/screenx, (complexPlaneY[1] - complexPlaneY[0])/screeny
+
+# Plot
+for px in range(-int(screenx/2), int(screenx/2), step):
+    for py in range(-int(screeny/2), int(screeny/2), step):
+        # Calculate complex plane coordinates
+        x, y = px * pixelToX, py * pixelToY
+        
+        # Calculate the number of iterations until divergence
+        m = julia(complex(x, y), c)
+        
+        # Choose a color based on the number of iterations
+        color_intensity = m / max_iter
+        color = (color_intensity, 0.5, 1 - color_intensity)
+        
+        # Set color and draw dot
+        jTurtle.color(color)
+        jTurtle.dot(2, color)
+        jTurtle.goto(px, py)
+        
+    turtle.update()
+
+turtle.mainloop()
+----------------------------------------------------------
+
+#dragon
+
+import turtle
+
+def dragon_curve(turtle, order, length, direction):
+    if order == 0:
+        turtle.forward(length)
+    else:
+        dragon_curve(turtle, order - 1, length, 1)
+        turtle.right(90 * direction)
+        dragon_curve(turtle, order - 1, length, -1)
+
+turtle.speed(0)
+dragon_curve(turtle, 5, 5, 1)
+turtle.done()
+
+----------------------------------------------------------------
+
+#c-curve
+
+from turtle import *
+color('red', 'blue')
+#begin_fill()
+rule=['r','f','l','l','f','r']
+prev=['r','f','l','l','f','r']
+ans=[]
+for iter in range(6):
+    ans = []
+    for i in prev:
+        if(i=='f'):
+            ans+=rule
+        else:
+            ans.append(i)
+    prev = ans
+
+print(ans)
+
+for i in range(0,len(ans)):
+    if(ans[i] == 'r'):
+        right(45)
+    elif(ans[i] == 'f'):
+        forward(20)
+    elif(ans[i] == 'l'):
+        left(45)
+
+
+#end_fill()
+done()
+
+------------------------------------------------------------------
+#terrain
+import turtle
+import random
+
+# Set up the screen
+screen = turtle.Screen()
+screen.setup(width=800, height=600)
+screen.bgcolor("skyblue")
+
+# Set up the turtle
+terrain_turtle = turtle.Turtle()
+terrain_turtle.speed(0)  # Set the fastest drawing speed
+terrain_turtle.penup()
+
+# Function to draw terrain
+def draw_terrain():
+    terrain_turtle.goto(-400, -20)  # Starting point
+    terrain_turtle.pendown()
+
+    # Draw the terrain
+    for _ in range(160):
+        terrain_turtle.color("green")
+        terrain_turtle.forward(5)  # Move forward
+        terrain_turtle.setheading(random.choice([0, 45, -45]))  # Turn randomly
+        terrain_turtle.forward(random.randint(1, 10))  # Move up or down randomly
+
+# Call the function to draw terrain
+draw_terrain()
+
+# Hide the turtle
+terrain_turtle.hideturtle()
+
+# Keep the window open
+screen.mainloop()
+-------------------------------------------------------------
+
